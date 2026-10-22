@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+model World {
+  id String @id
+  seed Int
+  version Int @default(1)
+}
+model Player {
+  id String @id @default(uuid())
+  name String
+  x Int @default(18)
+  y Int @default(18)
+  wood Int @default(0)
+  stone Int @default(0)
+  createdAt DateTime @default(now())
+  sessions Session[]
+  buildings Building[]
+  receipts Receipt[]
+}
+model Session {
+  tokenHash String @id
+  playerId String
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  @@index([playerId])
+  @@index([expiresAt])
+}
+model ResourceNode {
+  id String @id
+  x Int
+  y Int
+  kind String
+  quantity Int
+  capacity Int
+  regeneratesAt DateTime?
+  @@unique([x, y])
+}
+model Building {
+  id String @id @default(uuid())
+  kind String
+  x Int
+  y Int
+  ownerId String
+  owner Player @relation(fields: [ownerId], references: [id])
+  durability Int @default(100)
+  createdAt DateTime @default(now())
+  cells OccupiedCell[]
+  @@index([ownerId])
+}
+model OccupiedCell {
+  x Int
+  y Int
+  buildingId String
+  building Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  @@id([x,y])
+}
+model Receipt {
+  playerId String
+  actionId String
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  message String
+  createdAt DateTime @default(now())
+  @@id([playerId, actionId])
+}
+model WorldEvent {
+  id String @id @default(uuid())
+  type String
+  playerId String
+  payload Json
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+}
