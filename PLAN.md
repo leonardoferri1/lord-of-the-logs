@@ -2,7 +2,7 @@
 
 ## Scope and assumptions
 
-An original, Portuguese-language isometric browser settlement game. The supplied reference informs the forest palette, timber buildings and compact HUD, not copyrighted assets. The MVP ends at gathering and persistent construction; combat, quests and clans are future work. One authoritative process owns one seeded world. Anonymous identities are kept per browser tab so two tabs can demonstrate multiplayer; refresh/reconnect preserves identity, closing the tab loses the local credential.
+An original, Portuguese-language isometric browser settlement game. The supplied reference informs the forest palette, timber buildings and compact HUD, not copyrighted assets. The MVP ends at gathering and persistent construction; combat, quests and clans are future work. One authoritative process owns one seeded world. Active anonymous identities are kept per browser tab so two tabs can demonstrate multiplayer; refresh/reconnect preserves identity. A browser-local last-character credential supports explicitly continuing after closing the tab.
 
 ## Milestones / meaningful commits
 
@@ -26,4 +26,4 @@ Shared package owns geometry, terrain, collision, recipes and wire schemas. The 
 
 ## Status
 
-Implementation in progress. See README for final verified commands and known limitations.
+All implementation milestones completed. Domain tests (6), real PostgreSQL/network integration tests (5), lint and production builds passed. Docker images built successfully. Browser QA exercised entry, selection, movement and gathering. The restart test caught and drove a fix for startup readiness. PostgreSQL uses host port 55432 to avoid an existing service. See README and docs/VALIDATION.md for setup and verification limits.
