@@ -1,0 +1,28 @@
+{
+  "name": "@logs/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build"
+  },
+  "dependencies": {
+    "@logs/shared": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "phaser": "^3.88.2",
+    "zustand": "^5.0.3",
+    "@tanstack/react-query": "^5.67.3",
+    "socket.io-client": "^4.8.1",
+    "lucide-react": "^0.468.0"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "tailwindcss": "^4.0.14",
+    "@tailwindcss/vite": "^4.0.14"
+  }
+}
