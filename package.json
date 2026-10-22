@@ -14,7 +14,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@logs/shared": "git+https://github.com/leonardoferri1/lord-of-the-logs-shared.git#31dccd7f4d71c843b8561ce622571ce3671a9d99",
+    "@logs/shared": "git+https://github.com/leonardoferri1/lord-of-the-logs-shared.git#0939996cf03de77aa5433bbca66b11c447441c0f",
     "@nestjs/common": "^11.0.11",
     "@nestjs/core": "^11.0.11",
     "@nestjs/platform-express": "^11.0.11",

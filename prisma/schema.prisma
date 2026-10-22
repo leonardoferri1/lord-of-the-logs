@@ -17,6 +17,18 @@ model Player {
   y Int @default(18)
   wood Int @default(0)
   stone Int @default(0)
+  iron Int @default(0)
+  food Int @default(0)
+  gold Int @default(0)
+  level Int @default(1)
+  xp Int @default(0)
+  hp Int @default(100)
+  energy Int @default(100)
+  sword Int @default(1)
+  axe Int @default(1)
+  pickaxe Int @default(1)
+  stats Json @default("{}")
+  claimed String[] @default([])
   createdAt DateTime @default(now())
   sessions Session[]
   buildings Building[]
@@ -48,6 +60,8 @@ model Building {
   ownerId String
   owner Player @relation(fields: [ownerId], references: [id])
   durability Int @default(100)
+  producedAt DateTime @default(now())
+  plantedAt DateTime?
   createdAt DateTime @default(now())
   cells OccupiedCell[]
   @@index([ownerId])

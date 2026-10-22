@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@logs/shared':
-        specifier: git+https://github.com/leonardoferri1/lord-of-the-logs-shared.git#31dccd7f4d71c843b8561ce622571ce3671a9d99
-        version: https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/31dccd7f4d71c843b8561ce622571ce3671a9d99
+        specifier: git+https://github.com/leonardoferri1/lord-of-the-logs-shared.git#0939996cf03de77aa5433bbca66b11c447441c0f
+        version: https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/0939996cf03de77aa5433bbca66b11c447441c0f
       '@nestjs/common':
         specifier: ^11.0.11
         version: 11.2.7(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -657,8 +657,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@logs/shared@https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/31dccd7f4d71c843b8561ce622571ce3671a9d99':
-    resolution: {tarball: https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/31dccd7f4d71c843b8561ce622571ce3671a9d99}
+  '@logs/shared@https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/0939996cf03de77aa5433bbca66b11c447441c0f':
+    resolution: {tarball: https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/0939996cf03de77aa5433bbca66b11c447441c0f}
     version: 0.1.0
 
   '@lukeed/csprng@1.1.0':
@@ -2686,7 +2686,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@logs/shared@https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/31dccd7f4d71c843b8561ce622571ce3671a9d99':
+  '@logs/shared@https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/0939996cf03de77aa5433bbca66b11c447441c0f':
     dependencies:
       zod: 3.25.76
 
