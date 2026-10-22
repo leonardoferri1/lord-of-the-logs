@@ -4,6 +4,16 @@
 
 ![O Vale do Carvalho](docs/screenshots/world.png)
 
+## Três repositórios independentes
+
+| Repositório                                                                          | Responsabilidade                                                   |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| **[lord-of-the-logs](https://github.com/leonardoferri1/lord-of-the-logs)** (este)    | Servidor NestJS, banco, testes de integração e orquestração Docker |
+| [lord-of-the-logs-web](https://github.com/leonardoferri1/lord-of-the-logs-web)       | Cliente React/Phaser e proxy Nginx                                 |
+| [lord-of-the-logs-shared](https://github.com/leonardoferri1/lord-of-the-logs-shared) | Contratos e regras determinísticas, com testes de domínio          |
+
+Cada repositório possui seu próprio manifesto, lockfile e CI. Cliente e servidor fixam a mesma revisão do pacote compartilhado pelo SHA do commit. O Compose deste repositório busca uma revisão fixa do cliente no GitHub, portanto a execução completa não exige manter três checkouts locais. Não há pnpm workspace ou dependência entre pastas locais.
+
 ## Jogar localmente
 
 Requisitos: Docker Desktop/Engine com Compose, Git. Para desenvolvimento fora dos containers: Node.js 22 LTS e pnpm 9.15.9.
@@ -33,16 +43,24 @@ pnpm install --frozen-lockfile
 docker compose up -d db redis
 ```
 
-Copie `apps/server/.env.example` para `apps/server/.env` (PowerShell: `Copy-Item apps/server/.env.example apps/server/.env`; macOS/Linux: `cp apps/server/.env.example apps/server/.env`). Depois:
+Copie `.env.example` para `.env` (PowerShell: `Copy-Item .env.example .env`; macOS/Linux: `cp .env.example .env`). Depois, neste repositório:
 
 ```sh
 pnpm db:generate
 pnpm db:migrate
-pnpm --filter @logs/shared build
 pnpm dev
 ```
 
-Abra **http://localhost:5173**. O Vite encaminha REST e Socket.IO para a porta 3001. Não execute o servidor de desenvolvimento e o servidor do Compose simultaneamente na mesma porta. Para alternar: `docker compose stop server web`.
+Em outro terminal, prepare o cliente independente:
+
+```sh
+git clone https://github.com/leonardoferri1/lord-of-the-logs-web.git
+cd lord-of-the-logs-web
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Abra **http://localhost:5173**. O Vite encaminha REST e Socket.IO para a porta 3001. Não execute o servidor de desenvolvimento e o servidor do Compose simultaneamente na mesma porta. Para alternar: `docker compose stop server web`. Não é necessário clonar o pacote compartilhado para executar as aplicações: a instalação baixa a revisão fixada.
 
 | Serviço                | Porta local | Configuração                             |
 | ---------------------- | ----------- | ---------------------------------------- |
@@ -52,17 +70,17 @@ Abra **http://localhost:5173**. O Vite encaminha REST e Socket.IO para a porta 3
 | PostgreSQL             | 55432       | `DATABASE_URL`; interna ao Compose: 5432 |
 | Redis                  | 6379        | `REDIS_URL`, opcional fora do Compose    |
 
-As credenciais de exemplo servem apenas para desenvolvimento. Para outro domínio, configure `CLIENT_ORIGIN` com a origem exata. O frontend usa a mesma origem por padrão; `VITE_API_URL` permite uma API separada e precisa ser definida no build. O `.env` da raiz configura o Compose; o de `apps/server` configura o processo Node local.
+As credenciais de exemplo servem apenas para desenvolvimento. `CLIENT_ORIGIN` configura o servidor Node local; `WEB_ORIGIN` configura a origem usada pelo Compose. O frontend usa a mesma origem por padrão; `VITE_API_URL` permite uma API separada e precisa ser definida no build do cliente. O `.env` deste repositório contém as configurações locais do backend e do Compose.
 
 ## Stack e organização
 
-| Área              | Tecnologias e responsabilidade                                                         |
-| ----------------- | -------------------------------------------------------------------------------------- |
-| `apps/web`        | React 19, Vite, TypeScript, Phaser 3, Tailwind 4, Zustand, TanStack Query e Lucide     |
-| `apps/server`     | NestJS 11, Socket.IO, Prisma 6, PostgreSQL 17, Redis 7                                 |
-| `packages/shared` | Terreno determinístico, A*, coordenadas isométricas, colisão, receitas e contratos Zod |
-| `tests`           | Integração com PostgreSQL real, servidor Node e clientes Socket.IO                     |
-| `infra`           | Proxy Nginx; Compose e Dockerfile na raiz                                              |
+| Área                         | Tecnologias e responsabilidade                                                         |
+| ---------------------------- | -------------------------------------------------------------------------------------- |
+| Cliente independente         | React 19, Vite, TypeScript, Phaser 3, Tailwind 4, Zustand, TanStack Query e Lucide     |
+| `src` e `prisma` (este repo) | NestJS 11, Socket.IO, Prisma 6, PostgreSQL 17, Redis 7                                 |
+| Pacote `@logs/shared`        | Terreno determinístico, A*, coordenadas isométricas, colisão, receitas e contratos Zod |
+| `tests`                      | Integração com PostgreSQL real, servidor Node e clientes Socket.IO                     |
+| Infraestrutura               | Compose/Dockerfile neste repo; Nginx/Dockerfile no cliente                             |
 
 ```mermaid
 flowchart LR
@@ -90,12 +108,12 @@ Coletas e construções usam uma transação com um advisory lock compartilhado.
 
 ```sh
 pnpm lint
-pnpm test
+pnpm db:generate
 pnpm build
-pnpm test:integration
+pnpm test
 ```
 
-O teste de integração exige PostgreSQL acessível e o build do servidor atualizado. Por padrão usa `localhost:55432`; `DATABASE_URL` substitui esse endereço. Cria um **schema temporário isolado**, executa as migrations nele, inicia um servidor na porta 3101 e remove apenas esse schema ao terminar. Não use credenciais de produção para testes.
+`pnpm test` (também disponível como `pnpm test:integration`) executa os 5 testes de integração deste servidor. Exige PostgreSQL acessível e o build atualizado. Por padrão usa `localhost:55432`; `DATABASE_URL` substitui esse endereço. Cria um **schema temporário isolado**, executa as migrations nele, inicia um servidor na porta 3101 e remove apenas esse schema ao terminar. Não use credenciais de produção para testes. No repositório compartilhado, `pnpm test` executa os 6 testes de domínio; no cliente, `pnpm lint` e `pnpm build` validam a aplicação de forma independente.
 
 Cobertura comportamental:
 

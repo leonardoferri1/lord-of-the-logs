@@ -2,7 +2,7 @@
 
 ## Authority boundary
 
-`packages/shared` contains deterministic rules, not trusted client state. A browser may use those rules for feedback, but the server repeats every economically relevant validation. The gateway validates strict Zod payloads and authenticates a 256-bit bearer credential. PostgreSQL stores only its SHA-256 hash and expiration. Each socket is bound to a player through the validated session, never through a supplied player ID.
+The independently versioned `@logs/shared` package contains deterministic rules, not trusted client state. A browser may use those rules for feedback, but the server repeats every economically relevant validation. Both repositories pin the same Git commit; changes to contracts require coordinated upgrades. The gateway validates strict Zod payloads and authenticates a 256-bit bearer credential. PostgreSQL stores only its SHA-256 hash and expiration. Each socket is bound to a player through the validated session, never through a supplied player ID.
 
 REST: `POST /api/sessions`, `GET /api/me`, `GET /api/world`, `GET /api/health`. Socket intentions: `move`, `gather`, `build`, `resync`. Server events: `snapshot`, `result`, `activity`. A snapshot carries all public entities and only the receiving player's inventory. Join sends a full snapshot; automatic Socket.IO reconnect authenticates again and replaces stale state. The server loads its world before becoming ready.
 

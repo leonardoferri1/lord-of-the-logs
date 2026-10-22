@@ -27,3 +27,7 @@ Shared package owns geometry, terrain, collision, recipes and wire schemas. The 
 ## Status
 
 All implementation milestones completed. Domain tests (6), real PostgreSQL/network integration tests (5), lint and production builds passed. Docker images built successfully. Browser QA exercised entry, selection, movement and gathering. The restart test caught and drove a fix for startup readiness. PostgreSQL uses host port 55432 to avoid an existing service. See README and docs/VALIDATION.md for setup and verification limits.
+
+## Repository separation requested by the owner
+
+The initial implementation history is retained, but the final delivery uses three independent repositories: this authoritative server, `lord-of-the-logs-web`, and `lord-of-the-logs-shared`. The client and shared package were extracted with Git subtree history; each now has its own build, lockfile, documentation and CI. Both applications pin the same shared commit. The shared repository versions its small compiled distribution and CI checks it against a fresh build, avoiding dependency-install lifecycle differences across platforms. Compose builds the web application from a pinned remote Git commit. No local workspace links are required.

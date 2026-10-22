@@ -3,7 +3,7 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { io, type Socket } from 'socket.io-client';
-import { Store } from '../apps/server/src/store';
+import { Store } from '../src/store';
 import {
   blockers,
   distance,
@@ -13,7 +13,7 @@ import {
   type Snapshot,
   type Point,
   type ResourceNode,
-} from '../packages/shared/src';
+} from '@logs/shared';
 
 const baseUrl = process.env.DATABASE_URL || 'postgresql://logs:logs_local@localhost:55432/logs';
 const schema = `test_${Date.now()}`;
@@ -35,7 +35,7 @@ async function until(fn: () => boolean | Promise<boolean>, timeout = 12000) {
   }
 }
 async function startServer() {
-  server = spawn(process.execPath, [resolve('apps/server/dist/main.js')], {
+  server = spawn(process.execPath, [resolve('dist/main.js')], {
     env: {
       ...process.env,
       DATABASE_URL: url.toString(),
@@ -87,10 +87,7 @@ async function client(token?: string, name = 'Test Peasant') {
 }
 beforeAll(async () => {
   await admin.$executeRawUnsafe(`CREATE SCHEMA "${schema}"`);
-  const sql = readFileSync(
-    resolve('apps/server/prisma/migrations/202610220001_initial/migration.sql'),
-    'utf8',
-  );
+  const sql = readFileSync(resolve('prisma/migrations/202610220001_initial/migration.sql'), 'utf8');
   for (const statement of sql.split(';').filter((s) => s.trim()))
     await store.$executeRawUnsafe(statement);
   await store.onModuleInit();

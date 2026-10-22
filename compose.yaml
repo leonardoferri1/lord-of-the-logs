@@ -27,7 +27,7 @@ services:
     environment:
       DATABASE_URL: postgresql://logs:${POSTGRES_PASSWORD:-logs_local}@db:5432/logs
       REDIS_URL: redis://redis:6379
-      CLIENT_ORIGIN: ${CLIENT_ORIGIN:-http://localhost:8080}
+      CLIENT_ORIGIN: ${WEB_ORIGIN:-http://localhost:8080}
       PORT: 3001
     ports: ['127.0.0.1:3001:3001']
     depends_on:
@@ -47,8 +47,7 @@ services:
     restart: unless-stopped
   web:
     build:
-      context: .
-      target: web
+      context: https://github.com/leonardoferri1/lord-of-the-logs-web.git#1ea50c35a4ead00731df31cc738dfd6f1703981f
     ports: ['8080:80']
     depends_on:
       server: { condition: service_healthy }

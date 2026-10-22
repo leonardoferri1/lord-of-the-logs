@@ -1,19 +1,36 @@
 {
-  "name": "lord-of-the-logs",
+  "name": "@logs/server",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@9.15.9",
   "scripts": {
-    "dev": "pnpm --parallel --filter @logs/server --filter @logs/web dev",
-    "build": "pnpm --filter @logs/shared build && pnpm --filter @logs/server build && pnpm --filter @logs/web build",
-    "test": "vitest run",
-    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:integration": "vitest run",
+    "db:generate": "prisma generate",
+    "build": "tsc -p tsconfig.json",
+    "db:migrate": "prisma migrate deploy",
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
     "lint": "eslint .",
-    "format": "prettier --write .",
-    "db:generate": "pnpm --filter @logs/server exec prisma generate",
-    "db:migrate": "pnpm --filter @logs/server exec prisma migrate deploy"
+    "test": "vitest run",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@logs/shared": "git+https://github.com/leonardoferri1/lord-of-the-logs-shared.git#31dccd7f4d71c843b8561ce622571ce3671a9d99",
+    "@nestjs/common": "^11.0.11",
+    "@nestjs/core": "^11.0.11",
+    "@nestjs/platform-express": "^11.0.11",
+    "@nestjs/platform-socket.io": "^11.0.11",
+    "@nestjs/websockets": "^11.0.11",
+    "@prisma/client": "6.5.0",
+    "dotenv": "^16.4.7",
+    "ioredis": "^5.6.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "socket.io": "^4.8.1"
   },
   "devDependencies": {
+    "prisma": "6.5.0",
+    "tsx": "^4.19.3",
+    "@types/express": "^5.0.0",
     "@eslint/js": "^9.22.0",
     "eslint": "^9.22.0",
     "typescript-eslint": "^8.26.0",
@@ -22,5 +39,7 @@
     "vitest": "^3.0.8",
     "@types/node": "^22.13.10",
     "socket.io-client": "^4.8.1"
-  }
+  },
+  "packageManager": "pnpm@9.15.9",
+  "description": "Authoritative multiplayer game server for Lord of the Logs"
 }

@@ -7,10 +7,50 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@logs/shared':
+        specifier: git+https://github.com/leonardoferri1/lord-of-the-logs-shared.git#31dccd7f4d71c843b8561ce622571ce3671a9d99
+        version: https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/31dccd7f4d71c843b8561ce622571ce3671a9d99
+      '@nestjs/common':
+        specifier: ^11.0.11
+        version: 11.2.7(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/core':
+        specifier: ^11.0.11
+        version: 11.2.7(@nestjs/common@11.2.7(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.2.7)(@nestjs/websockets@11.2.7)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/platform-express':
+        specifier: ^11.0.11
+        version: 11.2.7(@nestjs/common@11.2.7(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.7)
+      '@nestjs/platform-socket.io':
+        specifier: ^11.0.11
+        version: 11.2.7(@nestjs/common@11.2.7(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/websockets@11.2.7)(rxjs@7.8.2)
+      '@nestjs/websockets':
+        specifier: ^11.0.11
+        version: 11.2.7(@nestjs/common@11.2.7(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.7)(@nestjs/platform-socket.io@11.2.7)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@prisma/client':
+        specifier: 6.5.0
+        version: 6.5.0(prisma@6.5.0(typescript@5.8.3))(typescript@5.8.3)
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.6.1
+      ioredis:
+        specifier: ^5.6.0
+        version: 5.11.1
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      rxjs:
+        specifier: ^7.8.2
+        version: 7.8.2
+      socket.io:
+        specifier: ^4.8.1
+        version: 4.8.4
     devDependencies:
       '@eslint/js':
         specifier: ^9.22.0
         version: 9.39.5
+      '@types/express':
+        specifier: ^5.0.0
+        version: 5.0.6
       '@types/node':
         specifier: ^22.13.10
         version: 22.20.5
@@ -20,9 +60,15 @@ importers:
       prettier:
         specifier: ^3.5.3
         version: 3.9.10
+      prisma:
+        specifier: 6.5.0
+        version: 6.5.0(typescript@5.8.3)
       socket.io-client:
         specifier: ^4.8.1
         version: 4.8.4
+      tsx:
+        specifier: ^4.19.3
+        version: 4.23.15
       typescript:
         specifier: ~5.8.2
         version: 5.8.3
@@ -610,6 +656,10 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@logs/shared@https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/31dccd7f4d71c843b8561ce622571ce3671a9d99':
+    resolution: {tarball: https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/31dccd7f4d71c843b8561ce622571ce3671a9d99}
+    version: 0.1.0
 
   '@lukeed/csprng@1.1.0':
     resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
@@ -2635,6 +2685,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
+
+  '@logs/shared@https://codeload.github.com/leonardoferri1/lord-of-the-logs-shared/tar.gz/31dccd7f4d71c843b8561ce622571ce3671a9d99':
+    dependencies:
+      zod: 3.25.76
 
   '@lukeed/csprng@1.1.0': {}
 
