@@ -4,11 +4,17 @@
 
 The independently versioned `@logs/shared` package contains deterministic rules, not trusted client state. A browser may use those rules for feedback, but the server repeats every economically relevant validation. Both repositories pin the same Git commit; changes to contracts require coordinated upgrades. The gateway validates strict Zod payloads and authenticates a 256-bit bearer credential. PostgreSQL stores only its SHA-256 hash and expiration. Each socket is bound to a player through the validated session, never through a supplied player ID.
 
-REST: `POST /api/sessions`, `GET /api/me`, `GET /api/world`, `GET /api/health`. Socket intentions: `move`, `gather`, `build`, `resync`. Server events: `snapshot`, `result`, `activity`. A snapshot carries all public entities and only the receiving player's inventory. Join sends a full snapshot; automatic Socket.IO reconnect authenticates again and replaces stale state. The server loads its world before becoming ready.
+REST: `POST /api/sessions`, `GET /api/me`, `GET /api/world`, `GET /api/health`. Socket intentions: `move`, `gather`, `build`, `attack`, `interact`, `upgrade`, `trade`, `eat`, `claim`, `chat`, `stop`, `resync`. Server events: `snapshot`, `result`, `chat`, `chatHistory`. A snapshot carries public players, goblins, buildings and recent effects, plus only the receiving player's inventory and profile (level, XP, vitals, tools, statistics, claimed quests). The resource list is the largest collection and is only resent when its revision changes; clients keep the last copy and request `resync` when they have none. Join sends a full snapshot; automatic Socket.IO reconnect authenticates again and replaces stale state. The server loads its world before becoming ready.
+
+## Combat, vitals and goblins
+
+Goblins are simulation state, not persisted rows. Spawn homes come from the shared camp table. Each tick a goblin picks the nearest traveller within its aggro radius (or whoever hit it), steps greedily towards them, attacks when adjacent and returns home, fully healed, after straying past the leash distance. A player's `attack` intention only names a target: the server paths to an adjacent tile, enforces the attack cadence, spends energy and computes damage from the sword tier and level. Idle players who are hit retaliate automatically. Towers shoot the nearest goblin in range on a fixed cadence and credit their owner.
+
+A defeat is the only point where combat touches the economy: the last hitter receives loot through the same locked, receipt-backed transaction as every other reward, with an action ID derived from the goblin's spawn generation. A fallen player respawns at the village with half health and loses 10% of their gold, also transactionally. Health and energy live in memory and are checkpointed with position; level-ups detected after a commit restore health and energy and are announced in chat.
 
 ## Movement and construction safety
 
-A* uses four neighbors and a Manhattan heuristic. Bounds, water, resources, the inn and building footprints define collision. A fixed 10 Hz loop advances at most one cell per 300 ms; delayed ticks do not speed a player up. Client interpolation cannot alter the authoritative position. New structures invalidate blocked remaining path steps. Simulation movement pauses during construction commits so a character cannot enter a footprint between validation and commit.
+A* uses four neighbors, a Manhattan heuristic and an expansion limit. Bounds, water, resources, village landmarks, goblin tents and building footprints define collision. A fixed 10 Hz loop advances at most one cell per 300 ms; delayed ticks do not speed a player up. Client interpolation cannot alter the authoritative position. New structures invalidate blocked remaining path steps. Simulation movement pauses during construction commits so a character cannot enter a footprint between validation and commit.
 
 Players may share cells; this avoids doorway deadlocks in the cooperative MVP. Roads remain unbuildable, keeping the spawn and primary routes open. Arbitrary placement can still enclose off-road regions: grief-resistant zoning is future work.
 
@@ -60,6 +66,18 @@ erDiagram
     int y
     int wood
     int stone
+    int iron
+    int food
+    int gold
+    int level
+    int xp
+    int hp
+    int energy
+    int sword
+    int axe
+    int pickaxe
+    json stats
+    string[] claimed
   }
   Session {
     string tokenHash PK
@@ -87,6 +105,8 @@ erDiagram
 
 Static terrain is generated from a checked-in algorithm and seed. Mutable resources, players and buildings live in PostgreSQL. Initialization inserts missing seed nodes without resetting existing quantities. Changing map geometry requires an explicit versioned migration; silently changing the seed would invalidate existing structures.
 
+`WORLD_VERSION` 2 introduced the 48 × 48 world. On startup over a version 1 database, the store migrates inside the advisory lock: it deletes and reseeds resource nodes (skipping cells under kept structures), keeps every building whose footprint is still valid in the new geometry, removes the rest while refunding their current recipe cost to the owner, moves every player to the new spawn and records a `migration` world event. A database from a newer version is refused. Buildings also carry `producedAt` (production, rest cooldown) and `plantedAt` (farm growth); their states are pure functions of those timestamps in the shared package.
+
 ## Abuse and failure cases
 
 | Scenario                                 | Behavior / limitation                                                              |
@@ -101,6 +121,9 @@ Static terrain is generated from a checked-in algorithm and seed. Mutable resour
 | Huge socket payload                      | 4 KiB Socket.IO limit                                                              |
 | SQL injection                            | Prisma parameterized writes; test-only schema identifiers are generated internally |
 | Nickname injection                       | Restricted characters; rendered as React text / canvas text                        |
+| Chat flood or control characters         | 1–140 printable characters, one message per 1.2 s per player, React text rendering |
+| Forged damage, loot or quest completion  | Client sends only a target or quest ID; damage, loot and progress are server-side  |
+| Remote trading or forging                | Villager range checked inside the economic transaction                             |
 | Database unavailable                     | Health fails; no fake connected mode or client-only writes                         |
 | Redis unavailable                        | Presence cache degraded; PostgreSQL gameplay remains authoritative                 |
 | Server restart                           | Reconnect reauthenticates and receives complete persisted state                    |

@@ -28,6 +28,10 @@ Shared package owns geometry, terrain, collision, recipes and wire schemas. The 
 
 All implementation milestones completed. Domain tests (6), real PostgreSQL/network integration tests (5), lint and production builds passed. Docker images built successfully. Browser QA exercised entry, selection, movement and gathering. The restart test caught and drove a fix for startup readiness. PostgreSQL uses host port 55432 to avoid an existing service. See README and docs/VALIDATION.md for setup and verification limits.
 
+## World v2: pixel art and deeper gameplay
+
+The owner compared the result with the original design reference and asked for a closer match and more depth. The client now renders original procedural pixel art (dithered foliage, outlined sprites, cliffs, docks, lit windows, day/night) with a HUD laid out like the reference: portrait with health and energy, icon sidebar, currencies, compass minimap, missions, eight-slot hotbar with XP and chat. Gameplay gained levels, energy, goblin camps with combat and loot, defence towers, tool tiers at the blacksmith, a merchant, farms and producing buildings, 13 chained quests and global chat. The world grew to 48 × 48 with seven regions behind an explicit, refunding v1 → v2 data migration. Shared tests: 11; server integration tests: 7. The three repositories now sit side by side in one local folder; they remain independent Git repositories.
+
 ## Repository separation requested by the owner
 
 The initial implementation history is retained, but the final delivery uses three independent repositories: this authoritative server, `lord-of-the-logs-web`, and `lord-of-the-logs-shared`. The client and shared package were extracted with Git subtree history; each now has its own build, lockfile, documentation and CI. Both applications pin the same shared commit. The shared repository versions its small compiled distribution and CI checks it against a fresh build, avoiding dependency-install lifecycle differences across platforms. Compose builds the web application from a pinned remote Git commit. No local workspace links are required.

@@ -6,7 +6,16 @@ import type { Request } from 'express';
 import { Store } from './store';
 import { Simulation } from './simulation';
 import { GameGateway } from './gateway';
-import { sessionSchema, WORLD_SEED, WORLD_SIZE, RECIPES } from '@logs/shared';
+import {
+  sessionSchema,
+  WORLD_SEED,
+  WORLD_SIZE,
+  WORLD_VERSION,
+  RECIPES,
+  REGIONS,
+  QUESTS,
+} from '@logs/shared';
+import { inventoryOf } from './store';
 
 @Controller('api')
 class ApiController {
@@ -17,14 +26,22 @@ class ApiController {
     return { status: 'ok' };
   }
   @Get('world') world() {
-    return { title: 'Lord of the Logs', seed: WORLD_SEED, size: WORLD_SIZE, recipes: RECIPES };
+    return {
+      title: 'Lord of the Logs',
+      seed: WORLD_SEED,
+      size: WORLD_SIZE,
+      version: WORLD_VERSION,
+      regions: REGIONS,
+      recipes: RECIPES,
+      quests: QUESTS,
+    };
   }
   @Get('me') async me(@Req() request: Request) {
     const player = await this.store.authenticate(
       request.headers.authorization?.replace(/^Bearer /, ''),
     );
     if (!player) throw new HttpException('Sessão inválida.', 401);
-    return { id: player.id, name: player.name, wood: player.wood, stone: player.stone };
+    return { id: player.id, name: player.name, level: player.level, ...inventoryOf(player) };
   }
   @Post('sessions') async session(@Body() body: unknown, @Req() request: Request) {
     const now = Date.now(),
