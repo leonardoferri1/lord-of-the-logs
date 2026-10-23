@@ -25,6 +25,7 @@ Cada repositório possui seu próprio manifesto, lockfile e CI. Cliente e servid
 - **13 missões encadeadas** com recompensas de XP e ouro, três ativas por vez.
 - **Conversa global** com histórico, mensagens do sistema e limites de envio.
 - Ciclo de dia e noite compartilhado, janelas e tochas iluminadas, mapa do mundo e minimapa com bússola.
+- Som sintetizado no navegador: efeitos posicionais, ambiente que muda com a hora e o lugar e música de fundo, com volumes ajustáveis.
 
 ## Jogar localmente
 
@@ -46,7 +47,7 @@ Abra **http://localhost:8080**. A primeira execução baixa imagens, compila as 
 6. Abra outra aba e escolha **um novo nome** para testar dois jogadores. Converse com **Enter**.
 7. Recarregue para recuperar a sessão da aba. Ao reabrir o navegador, **Continuar como…** recupera o último personagem salvo neste navegador, por até 30 dias.
 
-Atalhos: **I** inventário, **B** construção, **M** mapa, **J** missões, **H** guia, **1–8** barra de ferramentas (6 come), **E** coletar ou usar a construção selecionada, **F** centralizar, **Esc** cancelar. Setas ou arraste com botão direito movem a câmera; scroll ajusta o zoom.
+Atalhos: **I** inventário, **B** construção, **M** mapa, **J** missões, **H** guia, **1–8** barra de ferramentas (6 come), **E** coletar ou usar a construção selecionada, **F** centralizar, **N** silenciar, **Esc** cancelar. Setas ou arraste com botão direito movem a câmera; scroll ajusta o zoom.
 
 ## Desenvolvimento
 
@@ -148,7 +149,7 @@ GitHub Actions executa lint, testes, build e integração contra PostgreSQL. Con
 
 ## Direção visual
 
-Pixel art original, pintada em código: sombreamento com dithering ordenado, contornos, encostas de terra sob a costa, água com espuma e brilhos, telhados de telhas e janelas acesas. O HUD segue o mesmo estilo — retrato, barras de vida e energia, menu lateral, moedas, bússola, missões, barra de ferramentas com XP e conversa — e os ícones vêm dos mesmos sprites do jogo. Não há sprites, nomes, personagens ou imagens de franquias externas; a única fonte externa é a Pixelify Sans (OFL), empacotada no cliente.
+Pixel art original, pintada em código: sombreamento com dithering ordenado, contornos, encostas de terra sob a costa, água com espuma e brilhos, telhados de telhas e janelas acesas. O HUD segue o mesmo estilo — retrato, barras de vida e energia, menu lateral, moedas, bússola, missões, barra de ferramentas com XP e conversa — e os ícones vêm dos mesmos sprites do jogo. O som segue a mesma regra: é sintetizado com Web Audio, sem arquivos gravados. Não há sprites, nomes, personagens ou imagens de franquias externas; a única fonte externa é a Pixelify Sans (OFL), empacotada no cliente.
 
 ## Limitações honestas
 
