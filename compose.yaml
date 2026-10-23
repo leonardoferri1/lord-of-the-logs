@@ -47,7 +47,7 @@ services:
     restart: unless-stopped
   web:
     build:
-      context: https://github.com/leonardoferri1/lord-of-the-logs-web.git#a3ae8495acb42b5d6d75c9e47b28c8b9bec92e25
+      context: https://github.com/leonardoferri1/lord-of-the-logs-web.git#c47616a9d35df88972bf87579daba6c80bd0d71f
     ports: ['8080:80']
     depends_on:
       server: { condition: service_healthy }
